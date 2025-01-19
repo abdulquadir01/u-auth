@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.aq</groupId>
     <artifactId>uAuth</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>uAuth</name>
     <description>basic user authentication app</description>
     <properties>

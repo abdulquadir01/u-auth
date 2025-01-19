@@ -1,4 +1,4 @@
-package dev.aq.uauth.auth;
+package dev.aq.uauth.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.aq.uauth.constants.Role;

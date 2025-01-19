@@ -1,6 +1,5 @@
 package dev.aq.uauth.dto;
 
-
 import dev.aq.uauth.constants.Role;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;

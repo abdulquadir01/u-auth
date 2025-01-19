@@ -48,7 +48,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * SecurityContextHolder.getContext().getAuthentication() == null
      * this means that the user is not authenticated yet.
      */
-    if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+    if ( userEmail != null &&
+      SecurityContextHolder.getContext().getAuthentication() == null
+    ) {
       UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
       // cross-check the validity of token from DB
@@ -60,7 +62,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
             userDetails,
             null,
-            userDetails.getAuthorities());
+            userDetails.getAuthorities()
+        );
 
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

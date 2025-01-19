@@ -2,9 +2,9 @@ package dev.aq.uauth.constants;
 
 public final class UAuthConstants {
 
-  /*private UAuthConstants() {
-    //        private constructor will not allow to make object of this class
-  }*/
+  private UAuthConstants() {
+    throw new IllegalStateException("Constant class can't be instantiated.");
+  }
 
   public static final int TOKEN_VALIDITY_IN_MS = 1000 * 60 * 60;
   public static final int TOKEN_VALIDITY_IN_SEC = 60 * 60;

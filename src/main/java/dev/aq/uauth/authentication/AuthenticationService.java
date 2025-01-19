@@ -1,4 +1,4 @@
-package dev.aq.uauth.auth;
+package dev.aq.uauth.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.aq.uauth.config.JwtService;
@@ -41,7 +41,14 @@ public class AuthenticationService {
   public LogInResponse register(SignUpRequest signUpRequest) {
     logger.info("Inside  register()");
 
-    User user = User.builder().id(1L).firstName(signUpRequest.getFirstName()).lastName(signUpRequest.getLastName()).email(signUpRequest.getEmail()).password(passwordEncoder.encode(signUpRequest.getPassword())).role(signUpRequest.getRole()).build();
+    User user = User.builder()
+      .id(1L)
+      .firstName(signUpRequest.getFirstName())
+      .lastName(signUpRequest.getLastName())
+      .email(signUpRequest.getEmail())
+      .password(passwordEncoder.encode(signUpRequest.getPassword()))
+      .role(signUpRequest.getRole())
+      .build();
     logger.info("Saving new User to db: {}", user);
     User savedUser = userRepository.save(user);
 
@@ -61,19 +68,28 @@ public class AuthenticationService {
     Token savedToken = saveUserToken(savedUser, accessToken, refreshToken);
     logger.info("Token saved in db");
 
-    return LogInResponse.builder().username(signUpRequest.getEmail()).accessToken(accessToken).refreshToken(refreshToken).accessExpiresIn(savedToken.getExpiresIn()).build();
+    return LogInResponse.builder()
+      .username(signUpRequest.getEmail())
+      .accessToken(accessToken)
+      .refreshToken(refreshToken)
+      .accessExpiresIn(savedToken.getExpiresIn())
+      .build();
   }
 
   public LogInResponse authenticate(LogInRequest logInRequest) {
     logger.info("Inside authenticate()");
     try {
       logger.info("Authentication Request payload: {}", logInRequest);
-      authManager.authenticate(new UsernamePasswordAuthenticationToken(logInRequest.getEmail(), logInRequest.getPassword()));
+      authManager.authenticate(
+        new UsernamePasswordAuthenticationToken(logInRequest.getEmail(),
+          logInRequest.getPassword())
+      );
     } catch (Exception e) {
       e.getStackTrace();
     }
     logger.info("retrieving  user info after extracting mail id from request");
-    User user = userRepository.findByEmail(logInRequest.getEmail()).orElseThrow();
+    User user = userRepository.findByEmail(logInRequest.getEmail())
+      .orElseThrow();
 
     logger.info("generating access token");
     String accessToken = jwtService.generateToken(user);
@@ -82,24 +98,38 @@ public class AuthenticationService {
 
     /**
      * System.out.println("From AuthService  authenticate() ------");
-     System.out.println("accessToken: " + accessToken);
-     System.out.println("refreshToken: " + refreshToken);
+     * System.out.println("accessToken: " + accessToken);
+     * System.out.println("refreshToken: " + refreshToken);
      */
     logger.info("revoking previous tokens");
     revokeAllUserTokens(user);
 
     logger.info("saving the new access & refresh tokens to db");
-//        first we revoke the existing tokens of a user then assign a new one which has not been revoked.
+//        first we revoke the existing tokens of a user then assign a new one
+//        which has not been revoked.
     Token savedToken = saveUserToken(user, accessToken, refreshToken);
 
-    LogInResponse logInResponse = LogInResponse.builder().username(logInRequest.getEmail()).accessToken(accessToken).refreshToken(refreshToken).accessExpiresIn(savedToken.getExpiresIn()).build();
+    LogInResponse logInResponse = LogInResponse.builder()
+      .username(logInRequest.getEmail())
+      .accessToken(accessToken)
+      .refreshToken(refreshToken)
+      .accessExpiresIn(savedToken.getExpiresIn())
+      .build();
     logger.info("Returning authentication response {}", logInResponse);
     return logInResponse;
   }
 
   private Token saveUserToken(User user, String accessToken, String refreshToken) {
     logger.info("Saving access & refresh token for user: {}", user);
-    Token token = Token.builder().user(user).accessToken(accessToken).refreshToken(refreshToken).tokenType(TokenType.BEARER).isRevoked(false).isExpired(false).expiresIn(UAuthConstants.TOKEN_VALIDITY_IN_SEC).build();
+    Token token = Token.builder()
+      .user(user)
+      .accessToken(accessToken)
+      .refreshToken(refreshToken)
+      .tokenType(TokenType.BEARER)
+      .isRevoked(false)
+      .isExpired(false)
+      .expiresIn(UAuthConstants.TOKEN_VALIDITY_IN_SEC)
+      .build();
     return tokenRepository.save(token);
   }
 
@@ -141,15 +171,20 @@ public class AuthenticationService {
 
       /**
        * cross-check the validity of refreshToken from DB
-       Boolean isTokenValid = tokenRepository.findByRefreshToken(refreshToken)
-       .map(token -> !token.isExpired() && !token.isRevoked())
-       .orElse(false);
+       * Boolean isTokenValid = tokenRepository.findByRefreshToken(refreshToken)
+       * .map(token -> !token.isExpired() && !token.isRevoked())
+       * .orElse(false);
        */
 
       logger.info("checking the validity of refresh-token");
       if (jwtService.isTokenValid(refreshToken, user)) {
         String accessToken = jwtService.generateToken(user);
-        LogInResponse authResponse = LogInResponse.builder().username(userEmail).accessExpiresIn(UAuthConstants.TOKEN_VALIDITY_IN_SEC).accessToken(accessToken).refreshToken(refreshToken).build();
+        LogInResponse authResponse = LogInResponse.builder()
+          .username(userEmail)
+          .accessExpiresIn(UAuthConstants.TOKEN_VALIDITY_IN_SEC)
+          .accessToken(accessToken)
+          .refreshToken(refreshToken)
+          .build();
         logger.info("Revoking all prior access tokens before assigning new ones");
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken, refreshToken);

@@ -1,6 +1,6 @@
 package dev.aq.uauth.bootstrap;
 
-import dev.aq.uauth.auth.AuthenticationService;
+import dev.aq.uauth.authentication.AuthenticationService;
 import dev.aq.uauth.constants.Role;
 import dev.aq.uauth.dto.SignUpRequest;
 import org.slf4j.Logger;
@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 
 
-public class Bootstrap implements CommandLineRunner {
+public class BootstrapData implements CommandLineRunner {
 
-  private static final Logger logger = LoggerFactory.getLogger(Bootstrap.class);
+  private static final Logger logger = LoggerFactory.getLogger(BootstrapData.class);
 
   private final AuthenticationService authenticationService;
 
-  public Bootstrap(AuthenticationService authenticationService) {
+  public BootstrapData(AuthenticationService authenticationService) {
     this.authenticationService = authenticationService;
   }
 

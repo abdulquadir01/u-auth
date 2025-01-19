@@ -1,4 +1,4 @@
-package dev.aq.uauth.auth;
+package dev.aq.uauth.authentication;
 
 import dev.aq.uauth.dto.LogInRequest;
 import dev.aq.uauth.dto.LogInResponse;

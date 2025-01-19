@@ -4,7 +4,7 @@ import dev.aq.uauth.entity.Token;
 import dev.aq.uauth.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
 
   private static final Logger logger = LoggerFactory.getLogger(LogoutService.class);

@@ -3,6 +3,7 @@ package dev.aq.uauth.constants;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum Permission {
 
@@ -16,7 +17,6 @@ public enum Permission {
   MANAGER_CREATE("management:create"),
   MANAGER_DELETE("management:create");
 
-  @Getter
   private final String permissionName;
 
 }
